@@ -1,4 +1,5 @@
 artifacto
 =========
 
-A tool for group of artifacts analysis.
+Description:	A tool for group of artifacts analysis.
+Main-class:  	JarInspector
