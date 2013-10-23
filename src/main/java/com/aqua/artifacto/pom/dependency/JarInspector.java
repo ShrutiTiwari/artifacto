@@ -8,17 +8,26 @@ import java.util.jar.JarInputStream;
 public class JarInspector
 {
     private final JarEntriesProcessor jarEntriesProcessor;
-    
-    
+    private final static String  sep= File.separator ;
+    private final static String DEFAULT_DISTRIBUTION = System.getenv( "M2_HOME" )+ sep + "lib" + sep;
+    private final static String[] DEFAULT_ARTIFACTS = new String[] { "aether", "junit" };
+
     private JarInspector( Aggregator... aggregators ) {
         this.jarEntriesProcessor = new JarEntriesProcessor( aggregators );
     }
 
     public static void main( String[] args ) {
-        String MAVEN_3_LIB_LOCATION = "C:\\software\\installation\\build-tools\\apache-maven-3.0.4\\lib\\";
-        String artifact1 = "aether";
-        String artifact2 = "junit";
-        JarInspector.searchDependentArtifacts( MAVEN_3_LIB_LOCATION, artifact1, artifact2 );
+        if( args == null || args.length < 2 ) {
+            System.out.println("executing for M2_HOME distribution");
+            JarInspector.searchDependentArtifacts( DEFAULT_DISTRIBUTION, DEFAULT_ARTIFACTS );
+        }else{
+            System.out.println("executing for distribution at "+ args[0] );
+            String[] searchList= new String[args.length-1];
+            for(int i=1; i<args.length; i++){
+                searchList[i-1]=args[i];
+            }
+            JarInspector.searchDependentArtifacts( args[0], searchList );
+        }
     }
 
     private static void searchDependentArtifacts( String path, String... artifactNames ) {
